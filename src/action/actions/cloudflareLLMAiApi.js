@@ -9,7 +9,6 @@ const CHAT_ACTION = 'typing';
 export default function call(metadata) {
     log(TAG, 'api request');
 
-    // Grab the full sentence so the first word isn't deleted!
     const userMessage = metadata.update?.message?.text || metadata.msg;
 
     if (!userMessage) {
@@ -22,7 +21,6 @@ export default function call(metadata) {
         .then(() => {
             log(TAG, 'ai request', AI_MODEL, AI_ROLE, userMessage);
             
-            // Use native Cloudflare AI binding (No buggy wrapper needed!)
             return metadata.env.AI.run(AI_MODEL, {
                 messages: [
                     { role: 'system', content: AI_ROLE },
@@ -32,8 +30,18 @@ export default function call(metadata) {
         }).then(resp => {
             log(TAG, 'ai response', resp);
             
-            // Safety check: Grab the response text depending on how the model formats it
-            const replyText = resp.response || resp; 
+            // FIX: Safely open the box depending on which AI model you are using
+            let replyText = "";
+            if (typeof resp === 'string') {
+                replyText = resp;
+            } else if (resp.choices && resp.choices.length > 0 && resp.choices[0].message) {
+                replyText = resp.choices[0].message.content; // Gemma / Newer format
+            } else if (resp.response) {
+                replyText = resp.response; // Old Llama format
+            } else {
+                replyText = JSON.stringify(resp); // Ultimate fallback
+            }
+            
             const chunks = chunkString(replyText);
             
             log(TAG, 'forwarding to telegram', chunks);
