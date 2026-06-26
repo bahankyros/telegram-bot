@@ -1,9 +1,9 @@
 # https://developers.cloudflare.com/workers/wrangler/configuration/#source-of-truth
 # This file should be Source Of Truth for wrangler configuration
 # changes from the dashboard should be avoided if possible
-name = "paan bot" # i.e. name of your Worker
+name = "paan-bot" # i.e. name of your Worker
 main = "src/index.js"
-compatibility_date = "2024-01-04" # bump this to current date for new cloudflare updates
+compatibility_date = "2026-06-26" # bump this to current date for new cloudflare updates
 minify = true
 
 [ai]
@@ -11,8 +11,8 @@ binding = "AI" # i.e. available in your Worker on env.AI, used only for cloudfla
 
 [[d1_databases]]
 binding = "DB" # available in your Worker on env.db
-database_name = "YOUR DB NAME" # i.e. name of the database
-database_id = "YOUR DB ID" # i.e. id of the database you can find it in the D1 Console
+database_name = "paan-bot" # i.e. name of the database
+database_id = "d1c1d771-bab9-4e4e-a74f-22f654603b0a" # i.e. id of the database you can find it in the D1 Console
 
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
 # Note: Use secrets to store sensitive data.
