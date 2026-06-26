@@ -2,7 +2,7 @@ import { chunkString, log, loge, TelegramApi } from '#main';
 import { prompts } from '../../res.mjs';
 
 const TAG = 'cloudflareLLMAiApi';
-const AI_MODEL = '@cf/meta/llama-3.1-8b-instruct';
+const AI_MODEL = '@cf/meta/llama-3-8b-instruct';
 const AI_ROLE = prompts.mainSystem;
 const CHAT_ACTION = 'typing';
 
