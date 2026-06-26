@@ -8,23 +8,24 @@ import { prompts } from '../../res.mjs';
 //	@cf/meta/llama-2-7b-chat-fp16
 
 const TAG = 'cloudflareLLMAiApi';
-const AI_MODEL = '@cf/meta/llama-2-7b-chat-fp16';
+const AI_MODEL = '@cf/meta/llama-3.1-8b-instruct';
 const AI_ROLE = prompts.mainSystem;
 const CHAT_ACTION = 'typing';
 
 //TODO Disabled until cloudflare bundle module correctly
 // and make gateway working
 export default function call(metadata) {
-	return log(TAG, 'api request');
+	log(TAG, 'api request'); // REMOVED the "return" so the code keeps going
 	if (!metadata.msg) {
 		throw new Error(`user prompt is empty msg: ${metadata.msg}`);
 	}
-	const ai = new Ai(metadata.env.AI);
+	
 	const repo = new TelegramApi(metadata.env.TELEGRAM_BOT_TOKEN);
 	return repo.sendChatAction({ chat_id: metadata.chat_id, action: CHAT_ACTION })
 		.then(() => {
 			log(TAG, 'ai request', AI_MODEL, AI_ROLE, metadata.msg);
-			return ai.run(AI_MODEL, {
+            // UPDATED to use native Cloudflare AI syntax
+			return metadata.env.AI.run(AI_MODEL, {
 				messages: [
 					{ role: 'system', content: AI_ROLE },
 					{ role: 'user', content: metadata.msg }
@@ -33,9 +34,7 @@ export default function call(metadata) {
 		}).then(resp => {
 			log(TAG, 'ai response', resp);
 			const chunks = chunkString(resp.response);
-			// Insert ai metadata message before the response
 			chunks.unshift(`model: ${AI_MODEL}`);
-			// Making sure the answer is shorter than telegram message limit
 			log(TAG, 'forwarding to telegram', chunks);
 			return chunks.reduce((chain, chunk) => {
 				return chain.then(() => {
@@ -50,4 +49,5 @@ export default function call(metadata) {
 		}).catch(e => {
 			throw new Error('api fail', { cause: e });
 		});
+}
 }
