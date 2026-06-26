@@ -1,7 +1,7 @@
 # https://developers.cloudflare.com/workers/wrangler/configuration/#source-of-truth
 # This file should be Source Of Truth for wrangler configuration
 # changes from the dashboard should be avoided if possible
-name = "YOU WOKER NAME" # i.e. name of your Worker
+name = "paan bot" # i.e. name of your Worker
 main = "src/index.js"
 compatibility_date = "2024-01-04" # bump this to current date for new cloudflare updates
 minify = true
