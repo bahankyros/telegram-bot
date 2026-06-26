@@ -87,8 +87,8 @@ export default {
 };
 
 export const fallbackAction = (metadata) => {
-	return new Promise((resolve, reject) => {
-		console.log(FALLBACK_MESSAGE);
-		resolve(FALLBACK_MESSAGE);
-	});
+	// If it isn't a hardcoded command, send the raw message to the AI Brain!
+	console.log('Routing unknown command to Cloudflare AI Brain...');
+	return cloudflareLLMAiApi(metadata);
+};
 };
