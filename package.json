@@ -22,7 +22,7 @@
     "#res": "./src/res.mjs"
   },
   "devDependencies": {
-		"wrangler": "^3.19.0",
+		"wrangler": "^4.105.0",
 		"mocha": "^10.2.0",
 		"sinon": "^17.0.1",
     "chai": "^4.3.10"
