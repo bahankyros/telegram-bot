@@ -91,4 +91,3 @@ export const fallbackAction = (metadata) => {
 	console.log('Routing unknown command to Cloudflare AI Brain...');
 	return cloudflareLLMAiApi(metadata);
 };
-};
