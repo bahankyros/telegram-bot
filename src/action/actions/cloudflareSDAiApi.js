@@ -13,27 +13,23 @@ const CHAT_ACTION = 'upload_photo';
 // and make gateway working
 // and fix timeout problem
 export default function call(metadata) {
-	return log(TAG, 'api request');
+	log(TAG, 'api request'); // REMOVED the "return"
 	if (!metadata.msg) {
 		throw new Error(`user prompt is empty msg: ${metadata.msg}`)
 	}
-	const ai = new Ai(metadata.env.AI);
-	//returns binary string
+	
 	const repo = new TelegramApi(metadata.env.TELEGRAM_BOT_TOKEN);
 	return repo.sendChatAction({chat_id: metadata.chat_id, action: CHAT_ACTION})
 		.then(() => {
 			log(TAG, 'ai request');
-			return ai.run(AI_MODEL, { // <-- Timeout on this line!
+            // UPDATED to use native Cloudflare AI syntax
+			return metadata.env.AI.run(AI_MODEL, {
 				prompt: metadata.msg,
 				num_steps: AI_STEPS
 			});
 		}).then(resp => {
-			// dont log binary file, cloudflare logger is crashing lol
-			//log('cloudflareSDAiApi response', resp)
 			log(TAG, 'creating blob file');
 			const blob = new Blob([resp], {type: 'image/png'});
-			// suggested faster way to parse the image
-			//const binaryData = Buffer.from(resp, 'binary');
 			log(TAG, 'forwarding to telegram');
 			return repo.sendPhoto({
 				chat_id: metadata.chat_id, photo: blob,
