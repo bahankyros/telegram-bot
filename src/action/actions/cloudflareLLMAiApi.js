@@ -15,8 +15,7 @@ const CHAT_ACTION = 'typing';
 //TODO Disabled until cloudflare bundle module correctly
 // and make gateway working
 export default function call(metadata) {
-	return
-	log(TAG, 'api request');
+	return log(TAG, 'api request');
 	if (!metadata.msg) {
 		throw new Error(`user prompt is empty msg: ${metadata.msg}`);
 	}
